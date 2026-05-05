@@ -1,14 +1,20 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MIS_Cuidados_Criticos.Data;
 
-var url = Environment.GetEnvironmentVariable("DATABASE");
-Console.WriteLine($"Coneccion esta {url}");
 var builder = WebApplication.CreateBuilder(args);
+
+// 🔥 Obtener conexión correctamente
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
 // DB
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
-builder.WebHost.UseUrls("http:/0.0.0.0:0000");
+// 🔥 Puerto correcto para Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CuidadosCriticos",
@@ -20,7 +26,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-//Constructores de servicios
+// Servicios
 builder.Services.AddHttpClient<EnfermeriaService>();
 builder.Services.AddHttpClient<LogisticaService>();
 builder.Services.AddControllers();
@@ -34,5 +40,10 @@ app.UseSwaggerUI();
 
 app.UseAuthorization();
 app.MapControllers();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
