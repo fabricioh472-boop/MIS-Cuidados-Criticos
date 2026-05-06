@@ -33,7 +33,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // --- RAILWAY ---
-// Se habilitan Swagger y SwaggerUI fuera del bloque IsDevelopment
+/* Se habilitan Swagger y SwaggerUI fuera del bloque IsDevelopment
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
@@ -42,6 +42,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 app.UseDefaultFiles();
 app.UseStaticFiles();
+*/
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
