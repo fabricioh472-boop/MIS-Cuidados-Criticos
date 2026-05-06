@@ -2,359 +2,334 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard Consultas UCI</title>
+<title>Consultas - Cuidados Críticos</title>
 
 <style>
-body{
-    font-family: Arial;
-    margin:0;
-    background:#e6f7ff;
-}
+    body {
+        font-family: Arial;
+        background: #eaf6ff;
+        margin: 0;
+        padding: 20px;
+    }
 
-header{
-    background:#0077b6;
-    color:white;
-    padding:15px;
-    text-align:center;
-}
+    h1 {
+        text-align: center;
+        color: #0077b6;
+    }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:20px;
-}
+    .card {
+        background: white;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 10px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    }
 
-.card{
-    background:white;
-    padding:15px;
-    margin-bottom:20px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
+    button {
+        background: #00b4d8;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        margin-top: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
 
-h3{
-    color:#0077b6;
-}
+    button:hover {
+        background: #0077b6;
+    }
 
-button{
-    background:#00b4d8;
-    border:none;
-    color:white;
-    padding:8px 12px;
-    margin:5px;
-    cursor:pointer;
-    border-radius:5px;
-}
+    input {
+        padding: 5px;
+        margin: 5px;
+    }
 
-button:hover{
-    background:#0077b6;
-}
-
-input{
-    padding:8px;
-    margin:5px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-}
-
-th, td{
-    border:1px solid #ddd;
-    padding:8px;
-    text-align:center;
-}
-
-th{
-    background:#0077b6;
-    color:white;
-}
+    pre {
+        background: #f1f1f1;
+        padding: 10px;
+        border-radius: 5px;
+    }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>CONSULTAS UCI - DASHBOARD</h1>
-</header>
-
-<div class="container">
-
-<!-- 1 -->
-<div class="card">
-<h3>📊 Listado General (JOIN 3 tablas)</h3>
-<button onclick="listadoGeneral()">Cargar</button>
-<table><tbody id="tablaGeneral"></tbody></table>
-</div>
-
-<!-- 2 -->
-<div class="card">
-<h3>⚠ Alertas por nivel</h3>
-<button onclick="alertasNivel()">Ver</button>
-<ul id="nivel"></ul>
-</div>
-
-<!-- 3 -->
-<div class="card">
-<h3>❤️ Suma FC por paciente</h3>
-<input id="pacienteFC" placeholder="Código paciente">
-<button onclick="sumaFC()">Buscar</button>
-<div id="fc"></div>
-</div>
-
-<!-- 4 -->
-<div class="card">
-<h3>🔎 Buscar alerta</h3>
-<input id="codAlerta" placeholder="Código alerta">
-<button onclick="buscarAlerta()">Buscar</button>
-<div id="alerta"></div>
-</div>
-
-<!-- 5 -->
-<div class="card">
-<h3>🚫 Signos sin alerta</h3>
-<button onclick="signosSinAlerta()">Ver</button>
-<ul id="sinAlerta"></ul>
-</div>
-
-<!-- 6 -->
-<div class="card">
-<h3>📍 Estado paciente</h3>
-<input id="estadoPacienteCod" placeholder="Código paciente">
-<button onclick="estadoPaciente()">Consultar</button>
-<div id="estado"></div>
-</div>
-
-<!-- 7 -->
-<div class="card">
-<h3>📜 Historial signos</h3>
-<input id="histPaciente" placeholder="Código paciente">
-<button onclick="historial()">Ver</button>
-<ul id="historial"></ul>
-</div>
-
-<!-- 8 -->
-<div class="card">
-<h3>🚨 Paciente con más alertas</h3>
-<button onclick="masAlertas()">Ver</button>
-<div id="mas"></div>
-</div>
-
-<!-- 9 -->
-<div class="card">
-<h3>🟢 Pacientes sin alerta</h3>
-<button onclick="sinAlertas()">Ver</button>
-<ul id="sin"></ul>
-</div>
-
-<!-- 10 -->
-<div class="card">
-<h3>🫁 Oxígeno bajo</h3>
-<button onclick="oxigenoBajo()">Ver</button>
-<ul id="oxi"></ul>
-</div>
-
-<!-- 11 -->
-<div class="card">
-<h3>📈 Evolución clínica</h3>
-<input id="evoPaciente" placeholder="Código paciente">
-<button onclick="evolucion()">Ver</button>
-<ul id="evo"></ul>
-</div>
-
-<!-- 12 -->
-<div class="card">
-<h3>📊 Cantidad signos</h3>
-<button onclick="cantidadSignos()">Ver</button>
-<div id="cant"></div>
-</div>
-
-<!-- 13 -->
-<div class="card">
-<h3>🔥 Últimas alertas</h3>
-<button onclick="ultimasAlertas()">Ver</button>
-<ul id="ultimas"></ul>
-</div>
-
-<!-- 14 -->
-<div class="card">
-<h3>📉 Promedio FC</h3>
-<input id="promPaciente" placeholder="Código paciente">
-<button onclick="promedioFC()">Calcular</button>
-<div id="prom"></div>
-</div>
-
-<!-- 15 -->
-<div class="card">
-<h3>🚨 Pacientes críticos</h3>
-<button onclick="criticos()">Ver</button>
-<ul id="criticos"></ul>
-</div>
-
-<!-- 16 -->
-<div class="card">
-<h3>📊 Filtrar pacientes</h3>
-<input id="fcMin" placeholder="FC min">
-<input id="fcMax" placeholder="FC max">
-<input id="satMin" placeholder="Sat max">
-<button onclick="filtrar()">Filtrar</button>
-<ul id="filtrados"></ul>
-</div>
-
-<!-- 17 -->
-<div class="card">
-<h3>⚖ Comparar pacientes</h3>
-<input id="p1" placeholder="Paciente 1">
-<input id="p2" placeholder="Paciente 2">
-<button onclick="comparar()">Comparar</button>
-<div id="comp"></div>
-</div>
-
-</div>
+<h1>CONSULTAS - UCI</h1>
 
 <script>
+const API = "https://cuidados-criticos-production.up.railway.app";
 
-const API = "https://cuidados-criticos-production.up.railway.app/api/Consultas";
-
-// 1
-async function listadoGeneral(){
-    const r = await fetch(API + "/listado-general");
+/* =========================
+   1. LISTADO GENERAL
+========================= */
+async function listadoGeneral() {
+    const r = await fetch(`${API}/listado-general`);
     const d = await r.json();
-    document.getElementById("tablaGeneral").innerHTML =
-        d.map(x => `<tr><td>${JSON.stringify(x)}</td></tr>`).join("");
+    document.getElementById("r1").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 2
-async function alertasNivel(){
-    const r = await fetch(API + "/alertas-por-nivel");
+/* =========================
+   2. ALERTAS POR NIVEL
+========================= */
+async function alertasNivel() {
+    const r = await fetch(`${API}/alertas-por-nivel`);
     const d = await r.json();
-    document.getElementById("nivel").innerHTML =
-        d.map(x => `<li>${x.nivel} - ${x.cantidad}</li>`).join("");
+    document.getElementById("r2").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 3
-async function sumaFC(){
-    const c = document.getElementById("pacienteFC").value;
-    const r = await fetch(API + `/frecuencia-cardiaca-por-paciente?codigo=${c}`);
-    document.getElementById("fc").innerText = await r.text();
+/* =========================
+   3. SUMA FC
+========================= */
+async function sumaFC() {
+    const c = document.getElementById("fcCodigo").value;
+    const r = await fetch(`${API}/frecuencia-cardiaca-por-paciente?codigo=${c}`);
+    const d = await r.json();
+    document.getElementById("r3").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 4
-async function buscarAlerta(){
+/* =========================
+   4. ALERTA POR CODIGO
+========================= */
+async function alertaCodigo() {
     const c = document.getElementById("codAlerta").value;
-    const r = await fetch(API + `/Alerta-por-codigo/${c}`);
-    document.getElementById("alerta").innerText = await r.text();
-}
-
-// 5
-async function signosSinAlerta(){
-    const r = await fetch(API + "/Signo-sin-alerta");
+    const r = await fetch(`${API}/Alerta-por-codigo/${c}`);
     const d = await r.json();
-    document.getElementById("sinAlerta").innerHTML =
-        d.map(x => `<li>${x.codigoSigno}</li>`).join("");
+    document.getElementById("r4").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 6
-async function estadoPaciente(){
-    const c = document.getElementById("estadoPacienteCod").value;
-    const r = await fetch(API + `/estado-actual-paciente/${c}`);
-    document.getElementById("estado").innerText = await r.text();
-}
-
-// 7
-async function historial(){
-    const c = document.getElementById("histPaciente").value;
-    const r = await fetch(API + `/historial-signos/${c}`);
+/* =========================
+   5. SIGNO SIN ALERTA
+========================= */
+async function sinAlerta() {
+    const r = await fetch(`${API}/Signo-sin-alerta`);
     const d = await r.json();
-    document.getElementById("historial").innerHTML =
-        d.map(x => `<li>${JSON.stringify(x)}</li>`).join("");
+    document.getElementById("r5").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 8
-async function masAlertas(){
-    const r = await fetch(API + "/Paciente-con-mas-alertas");
-    document.getElementById("mas").innerText = await r.text();
-}
-
-// 9
-async function sinAlertas(){
-    const r = await fetch(API + "/Paciente-sin-alerta");
+/* =========================
+   6. ESTADO PACIENTE
+========================= */
+async function estadoPaciente() {
+    const c = document.getElementById("pacEstado").value;
+    const r = await fetch(`${API}/estado-actual-paciente/${c}`);
     const d = await r.json();
-    document.getElementById("sin").innerHTML =
-        d.map(x => `<li>${x.codigo}</li>`).join("");
+    document.getElementById("r6").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 10
-async function oxigenoBajo(){
-    const r = await fetch(API + "/Oxigeno%20bajo");
+/* =========================
+   7. HISTORIAL
+========================= */
+async function historial() {
+    const c = document.getElementById("hist").value;
+    const r = await fetch(`${API}/historial-signos/${c}`);
     const d = await r.json();
-    document.getElementById("oxi").innerHTML =
-        d.map(x => `<li>${x.codigo} - ${x.saturacion_oxigeno}</li>`).join("");
+    document.getElementById("r7").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 11
-async function evolucion(){
-    const c = document.getElementById("evoPaciente").value;
-    const r = await fetch(API + `/evolucion-clinica/${c}`);
+/* =========================
+   8. MAS ALERTAS
+========================= */
+async function masAlertas() {
+    const r = await fetch(`${API}/Paciente-con-mas-alertas`);
     const d = await r.json();
-    document.getElementById("evo").innerHTML =
-        d.map(x => `<li>${JSON.stringify(x)}</li>`).join("");
+    document.getElementById("r8").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 12
-async function cantidadSignos(){
-    const r = await fetch(API + "/Cantidad-signos");
-    document.getElementById("cant").innerText = await r.text();
-}
-
-// 13
-async function ultimasAlertas(){
-    const r = await fetch(API + "/Mostrar-ultimas-alertas");
+/* =========================
+   9. SIN ALERTAS
+========================= */
+async function sinAlertas() {
+    const r = await fetch(`${API}/Paciente-sin-alerta`);
     const d = await r.json();
-    document.getElementById("ultimas").innerHTML =
-        d.map(x => `<li>${x.codigo}</li>`).join("");
+    document.getElementById("r9").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 14
-async function promedioFC(){
-    const c = document.getElementById("promPaciente").value;
-    const r = await fetch(API + `/promedio-fc/${c}`);
-    document.getElementById("prom").innerText = await r.text();
-}
-
-// 15
-async function criticos(){
-    const r = await fetch(API + "/Pacientes-criticos-con-alerta");
+/* =========================
+   10. OXIGENO BAJO
+========================= */
+async function oxigeno() {
+    const r = await fetch(`${API}/Oxigeno%20bajo`);
     const d = await r.json();
-    document.getElementById("criticos").innerHTML =
-        d.map(x => `<li>${x.pacienteCritico}</li>`).join("");
+    document.getElementById("r10").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 16
-async function filtrar(){
+/* =========================
+   11. CANTIDAD SIGNOS
+========================= */
+async function cantidad() {
+    const r = await fetch(`${API}/Cantidad-signos`);
+    const d = await r.json();
+    document.getElementById("r11").innerHTML = JSON.stringify(d, null, 2);
+}
+
+/* =========================
+   12. ULTIMAS ALERTAS
+========================= */
+async function ultimas() {
+    const r = await fetch(`${API}/Mostrar-ultimas-alertas`);
+    const d = await r.json();
+    document.getElementById("r12").innerHTML = JSON.stringify(d, null, 2);
+}
+
+/* =========================
+   13. PROMEDIO FC
+========================= */
+async function promedio() {
+    const c = document.getElementById("prom").value;
+    const r = await fetch(`${API}/promedio-fc/${c}`);
+    const d = await r.json();
+    document.getElementById("r13").innerHTML = JSON.stringify(d, null, 2);
+}
+
+/* =========================
+   14. CRITICOS
+========================= */
+async function criticos() {
+    const r = await fetch(`${API}/Pacientes-criticos-con-alerta`);
+    const d = await r.json();
+    document.getElementById("r14").innerHTML = JSON.stringify(d, null, 2);
+}
+
+/* =========================
+   15. FILTRAR
+========================= */
+async function filtrar() {
     const fcMin = document.getElementById("fcMin").value;
     const fcMax = document.getElementById("fcMax").value;
-    const satMin = document.getElementById("satMin").value;
+    const sat = document.getElementById("sat").value;
 
-    const r = await fetch(API + `/filtrar-pacientes-rango?fcMin=${fcMin}&fcMax=${fcMax}&satMin=${satMin}`);
+    const r = await fetch(`${API}/filtrar-pacientes-rango?fcMin=${fcMin}&fcMax=${fcMax}&satMin=${sat}`);
     const d = await r.json();
 
-    document.getElementById("filtrados").innerHTML =
-        d.map(x => `<li>${x.paciente}</li>`).join("");
+    document.getElementById("r15").innerHTML = JSON.stringify(d, null, 2);
 }
 
-// 17
-async function comparar(){
-    const p1 = document.getElementById("p1").value;
-    const p2 = document.getElementById("p2").value;
+/* =========================
+   16. COMPARAR
+========================= */
+async function comparar() {
+    const c1 = document.getElementById("c1").value;
+    const c2 = document.getElementById("c2").value;
 
-    const r = await fetch(API + `/comparar-pacientes?cod1=${p1}&cod2=${p2}`);
-    document.getElementById("comp").innerText = await r.text();
+    const r = await fetch(`${API}/comparar-pacientes?cod1=${c1}&cod2=${c2}`);
+    const d = await r.json();
+
+    document.getElementById("r16").innerHTML = JSON.stringify(d, null, 2);
 }
 
+/* =========================
+   17. VARIABILIDAD
+========================= */
+async function variabilidad() {
+    const fi = document.getElementById("fi").value;
+    const ff = document.getElementById("ff").value;
+
+    const r = await fetch(`${API}/variabilidad-signos?fechaInicio=${fi}&fechaFin=${ff}`);
+    const d = await r.json();
+
+    document.getElementById("r17").innerHTML = JSON.stringify(d, null, 2);
+}
 </script>
+
+---
+
+<!-- UI -->
+<div class="card">
+<button onclick="listadoGeneral()">Listado General</button>
+<pre id="r1"></pre>
+</div>
+
+<div class="card">
+<button onclick="alertasNivel()">Alertas por nivel</button>
+<pre id="r2"></pre>
+</div>
+
+<div class="card">
+<input id="fcCodigo" placeholder="Codigo paciente">
+<button onclick="sumaFC()">Sumar FC</button>
+<pre id="r3"></pre>
+</div>
+
+<div class="card">
+<input id="codAlerta" placeholder="Codigo alerta">
+<button onclick="alertaCodigo()">Buscar alerta</button>
+<pre id="r4"></pre>
+</div>
+
+<div class="card">
+<button onclick="sinAlerta()">Signos sin alerta</button>
+<pre id="r5"></pre>
+</div>
+
+<div class="card">
+<input id="pacEstado" placeholder="Codigo paciente">
+<button onclick="estadoPaciente()">Estado paciente</button>
+<pre id="r6"></pre>
+</div>
+
+<div class="card">
+<input id="hist" placeholder="Historial paciente">
+<button onclick="historial()">Historial</button>
+<pre id="r7"></pre>
+</div>
+
+<div class="card">
+<button onclick="masAlertas()">Paciente más alerta</button>
+<pre id="r8"></pre>
+</div>
+
+<div class="card">
+<button onclick="sinAlertas()">Pacientes sin alerta</button>
+<pre id="r9"></pre>
+</div>
+
+<div class="card">
+<button onclick="oxigeno()">Oxígeno bajo</button>
+<pre id="r10"></pre>
+</div>
+
+<div class="card">
+<button onclick="cantidad()">Cantidad signos</button>
+<pre id="r11"></pre>
+</div>
+
+<div class="card">
+<button onclick="ultimas()">Últimas alertas</button>
+<pre id="r12"></pre>
+</div>
+
+<div class="card">
+<input id="prom" placeholder="Codigo paciente">
+<button onclick="promedio()">Promedio FC</button>
+<pre id="r13"></pre>
+</div>
+
+<div class="card">
+<button onclick="criticos()">Críticos</button>
+<pre id="r14"></pre>
+</div>
+
+<div class="card">
+<input id="fcMin" placeholder="FC min">
+<input id="fcMax" placeholder="FC max">
+<input id="sat" placeholder="Sat min">
+<button onclick="filtrar()">Filtrar</button>
+<pre id="r15"></pre>
+</div>
+
+<div class="card">
+<input id="c1" placeholder="Paciente 1">
+<input id="c2" placeholder="Paciente 2">
+<button onclick="comparar()">Comparar</button>
+<pre id="r16"></pre>
+</div>
+
+<div class="card">
+<input id="fi" placeholder="Fecha inicio">
+<input id="ff" placeholder="Fecha fin">
+<button onclick="variabilidad()">Variabilidad</button>
+<pre id="r17"></pre>
+</div>
 
 </body>
 </html>
