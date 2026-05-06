@@ -4,7 +4,7 @@ using MIS_Cuidados_Criticos.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 //
-// 🔥 CORS
+// CORS
 //
 builder.Services.AddCors(options =>
 {
@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
 });
 
 //
-// 🔥 JSON FIX (EVITA ERROR 500 POR RELACIONES CIRCULARES)
+// JSON FIX (EVITA CICLOS)
 //
 builder.Services.AddControllers()
 .AddJsonOptions(options =>
@@ -27,23 +27,24 @@ builder.Services.AddControllers()
 });
 
 //
-// 🔥 CONNECTION STRING
+// CONNECTION STRING (CORREGIDO PARA RAILWAY)
 //
-var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
 string connectionString;
 
-if (!string.IsNullOrWhiteSpace(databaseUrl))
-{
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
+var host = Environment.GetEnvironmentVariable("PGHOST");
+var port = Environment.GetEnvironmentVariable("PGPORT");
+var database = Environment.GetEnvironmentVariable("PGDATABASE");
+var user = Environment.GetEnvironmentVariable("PGUSER");
+var password = Environment.GetEnvironmentVariable("PGPASSWORD");
 
+if (!string.IsNullOrWhiteSpace(host))
+{
     connectionString =
-        $"Host={uri.Host};" +
-        $"Port={uri.Port};" +
-        $"Database={uri.AbsolutePath.TrimStart('/')};" +
-        $"Username={userInfo[0]};" +
-        $"Password={userInfo[1]};" +
+        $"Host={host};" +
+        $"Port={port};" +
+        $"Database={database};" +
+        $"Username={user};" +
+        $"Password={password};" +
         $"SSL Mode=Require;Trust Server Certificate=true";
 }
 else
@@ -54,7 +55,7 @@ else
 }
 
 //
-// 🔥 DB CONTEXT
+// DB CONTEXT
 //
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, npgsql =>
@@ -65,7 +66,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 //
-// 🔥 SWAGGER
+// SWAGGER
 //
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -73,12 +74,12 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 //
-// 🔥 DEBUG ENDPOINT (IMPORTANTE PARA PROBAR RAILWAY)
+// TEST ENDPOINT
 //
 app.MapGet("/ping", () => "OK");
 
 //
-// 🔥 MIGRACIONES (PROTEGIDAS)
+// MIGRACIONES
 //
 using (var scope = app.Services.CreateScope())
 {
@@ -86,18 +87,17 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // 🔴 SI SIGUE 500, comenta esto primero para probar
         db.Database.Migrate();
-        Console.WriteLine("✔ Migraciones OK");
+        Console.WriteLine("Migraciones OK");
     }
     catch (Exception ex)
     {
-        Console.WriteLine("❌ Migraciones error: " + ex.Message);
+        Console.WriteLine("Error migraciones: " + ex.Message);
     }
 }
 
 //
-// 🔥 PIPELINE
+// PIPELINE
 //
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -109,7 +109,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 //
-// 🔥 ROOT
+// ROOT
 //
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
