@@ -10,18 +10,21 @@ namespace MIS_Cuidados_Criticos.Controllers
     public class ConexionesController : ControllerBase
     {
         private readonly EnfermeriaService _enfermeriaService;
+        private readonly MedicamentosService _medicamentosService;
         private readonly ApplicationDbContext _context;
 
         public ConexionesController(
             EnfermeriaService enfermeriaService,
+            MedicamentosService medicamentosService,
             ApplicationDbContext context)
         {
             _enfermeriaService = enfermeriaService;
+            _medicamentosService = medicamentosService;
             _context = context;
         }
 
         // =========================
-        // GET ENFERMERAS
+        // ENFERMERAS
         // =========================
         [HttpGet("enfermeras-disponibles")]
         public async Task<IActionResult> EnfermerasDisponibles()
@@ -30,6 +33,20 @@ namespace MIS_Cuidados_Criticos.Controllers
 
             if (data == null)
                 return BadRequest("No se pudo obtener datos del microservicio");
+
+            return Ok(data);
+        }
+
+        // =========================
+        // MEDICAMENTOS (NUEVO)
+        // =========================
+        [HttpGet("medicamentos-catalogo")]
+        public async Task<IActionResult> MedicamentosCatalogo()
+        {
+            var data = await _medicamentosService.ObtenerCatalogo();
+
+            if (data == null)
+                return BadRequest("No se pudo obtener el catálogo de medicamentos");
 
             return Ok(data);
         }

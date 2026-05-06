@@ -42,6 +42,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //
 builder.Services.AddHttpClient<EnfermeriaService>();
 builder.Services.AddScoped<EnfermeriaService>();
+builder.Services.AddHttpClient<MedicamentosService>();
+builder.Services.AddScoped<MedicamentosService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
