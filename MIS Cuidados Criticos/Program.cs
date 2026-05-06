@@ -41,8 +41,9 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = ""
 });
 app.UseDefaultFiles();
-app.UseStaticFiles();
 */
+app.MapFallbackToFile("index.html");
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
