@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Cuidados Críticos</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eaf6ff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #0077b6;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        input, button {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            background: #0077b6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005f87;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background: #90e0ef;
+        }
+
+        td, th {
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Sistema Cuidados Críticos</h1>
+
+<!-- ================= ALERTAS ================= -->
+<div class="container">
+    <h2>Alertas</h2>
+
+    <button onclick="listarAlertas()">Listar Alertas</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Tipo</th>
+                <th>Nivel</th>
+            </tr>
+        </thead>
+        <tbody id="tablaAlertas"></tbody>
+    </table>
+
+    <hr>
+
+    <h3>Crear Alerta</h3>
+    <input id="codigo" placeholder="Código">
+    <input id="tipo" placeholder="Tipo">
+    <input id="nivel" placeholder="Nivel">
+    <button onclick="crearAlerta()">Crear</button>
+
+    <hr>
+
+    <h3>Buscar Alerta</h3>
+    <input id="codBuscar" placeholder="Código">
+    <button onclick="buscarAlerta()">Buscar</button>
+    <p id="resultadoBuscar"></p>
+
+    <hr>
+
+    <h3>Actualizar Alerta</h3>
+    <input id="codUpdate" placeholder="Código">
+    <input id="tipoUpdate" placeholder="Tipo">
+    <input id="nivelUpdate" placeholder="Nivel">
+    <button onclick="actualizarAlerta()">Actualizar</button>
+
+    <hr>
+
+    <h3>Eliminar Alerta</h3>
+    <input id="codDelete" placeholder="Código">
+    <button onclick="eliminarAlerta()">Eliminar</button>
+</div>
+
+<script>
+const API = "https://cuidados-criticos-production.up.railway.app/api";
+
+/* ================= LISTAR ================= */
+async function listarAlertas() {
+    const r = await fetch(API + "/Alerta");
+    const data = await r.json();
+
+    document.getElementById("tablaAlertas").innerHTML =
+        data.map(a => `
+            <tr>
+                <td>${a.codigo}</td>
+                <td>${a.tipo}</td>
+                <td>${a.nivel_criticidad}</td>
+            </tr>
+        `).join("");
+}
+
+/* ================= CREAR ================= */
+async function crearAlerta() {
+    const dto = {
+        codigo: document.getElementById("codigo").value,
+        tipo: document.getElementById("tipo").value,
+        nivel_criticidad: document.getElementById("nivel").value
+    };
+
+    await fetch(API + "/Alerta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dto)
+    });
+
+    listarAlertas();
+}
+
+/* ================= BUSCAR ================= */
+async function buscarAlerta() {
+    const codigo = document.getElementById("codBuscar").value;
+
+    const r = await fetch(API + "/Alerta/" + codigo);
+
+    if (!r.ok) {
+        document.getElementById("resultadoBuscar").innerText = "No encontrado";
+        return;
+    }
+
+    const data = await r.json();
+
+    document.getElementById("resultadoBuscar").innerText =
+        `${data.codigo} - ${data.tipo} - ${data.nivel_criticidad}`;
+}
+
+/* ================= ACTUALIZAR ================= */
+async function actualizarAlerta() {
+    const codigo = document.getElementById("codUpdate").value;
+
+    const dto = {
+        codigo: codigo,
+        tipo: document.getElementById("tipoUpdate").value,
+        nivel_criticidad: document.getElementById("nivelUpdate").value
+    };
+
+    await fetch(API + "/Alerta/" + codigo, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dto)
+    });
+
+    listarAlertas();
+}
+
+/* ================= ELIMINAR ================= */
+async function eliminarAlerta() {
+    const codigo = document.getElementById("codDelete").value;
+
+    await fetch(API + "/Alerta/" + codigo, {
+        method: "DELETE"
+    });
+
+    listarAlertas();
+}
+</script>
+
+</body>
+</html>

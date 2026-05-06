@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Signos Vitales</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #e6f7ff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077b6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+        }
+
+        button {
+            background: #0096c7;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #0077b6;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>⚕️ SIGNOS VITALES</h1>
+
+<div class="container">
+
+    <!-- CREAR -->
+    <div class="card">
+        <h3>Registrar Signo Vital</h3>
+        <input id="codigo" placeholder="Código">
+        <input id="fc" type="number" placeholder="Frecuencia cardiaca">
+        <input id="sat" type="number" placeholder="Saturación oxígeno">
+        <input id="presion" placeholder="Presión arterial">
+        <button onclick="crear()">Guardar</button>
+    </div>
+
+    <!-- BUSCAR -->
+    <div class="card">
+        <h3>Buscar por código</h3>
+        <input id="codigoBuscar" placeholder="Código">
+        <button onclick="buscar()">Buscar</button>
+        <p id="resultado"></p>
+    </div>
+
+    <!-- LISTAR -->
+    <div class="card">
+        <h3>Lista de Signos Vitales</h3>
+        <button onclick="listar()">Cargar</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>FC</th>
+                    <th>Sat</th>
+                    <th>Presión</th>
+                </tr>
+            </thead>
+            <tbody id="tabla"></tbody>
+        </table>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="card">
+        <h3>Dashboard Resumido</h3>
+        <button onclick="dashboard()">Ver</button>
+        <ul id="dash"></ul>
+    </div>
+
+</div>
+
+<script>
+const API = "https://cuidados-criticos-production.up.railway.app/api/SignoVital";
+
+// CREAR (ARREGLADO)
+async function crear() {
+
+    const data = {
+        codigo: document.getElementById("codigo").value,
+        frecuencia_cardiaca: Number(document.getElementById("fc").value),
+        saturacion_oxigeno: Number(document.getElementById("sat").value),
+        presion_arterial: document.getElementById("presion").value
+    };
+
+    const r = await fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const text = await r.text();
+
+    if (!r.ok) {
+        console.log(text);
+        alert("Error: " + text);
+        return;
+    }
+
+    alert("Creado correctamente");
+    listar();
+}
+
+// LISTAR (ARREGLADO)
+async function listar() {
+    const r = await fetch(API);
+    const d = await r.json();
+
+    document.getElementById("tabla").innerHTML =
+        d.map(x => `
+            <tr>
+                <td>${x.codigo}</td>
+                <td>${x.frecuencia_cardiaca}</td>
+                <td>${x.saturacion_oxigeno}</td>
+                <td>${x.presion_arterial}</td>
+            </tr>
+        `).join("");
+}
+</script>
+
+</body>
+</html>

@@ -1,4 +1,16 @@
-﻿const API = "https://cuidados-criticos-production.up.railway.app/api/Consultas";
+﻿const API = "https://cuidados-criticos-production.up.railway.app/listado-general";
+const API = "https://cuidados-criticos-production.up.railway.app/alertas-por-nivel"
+const API = "https://cuidados-criticos-production.up.railway.app/frecuencia-cardiaca-por-paciente"
+const API = "https://cuidados-criticos-production.up.railway.app/Signo-sin-alerta"
+const API = "https://cuidados-criticos-production.up.railway.app/estado-actual-paciente"
+const API = "https://cuidados-criticos-production.up.railway.app/historial-signos"
+const API = "https://cuidados-criticos-production.up.railway.app/Paciente-con-mas-alertas"
+const API = "https://cuidados-criticos-production.up.railway.app/Paciente-sin-alerta"
+const API = "https://cuidados-criticos-production.up.railway.app/Oxigeno bajo"
+const API = "https://cuidados-criticos-production.up.railway.app/Cantidad-signos"
+const API = "https://cuidados-criticos-production.up.railway.app/Mostrar-ultimas-alertas"
+const API = "https://cuidados-criticos-production.up.railway.app/filtrar-pacientes-rango"
+const API = "https://cuidados-criticos-production.up.railway.app/comparar-pacientes"
 
 // 1
 async function listadoGeneral() {

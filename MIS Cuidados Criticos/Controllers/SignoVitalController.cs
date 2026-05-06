@@ -56,15 +56,18 @@ namespace MIS_Cuidados_Criticos.Controllers
 
         // CREAR
         [HttpPost]
-        public async Task<IActionResult> AgregarSignos(string codigo, int frecuencia_cardiaca, float saturacion_oxigeno, string presion_arterial)
+        public async Task<IActionResult> AgregarSignos([FromBody] SignoVitalDTO dto)
         {
+            if (dto == null)
+                return BadRequest("DTO vacío");
+
             var dato = new SignoVital
             {
                 Estado = "Activo",
-                Codigo = codigo.ToLower(),
-                Frecuencia_cardiaca = frecuencia_cardiaca,
-                Presion_arterial = presion_arterial,
-                Saturacion_oxigeno = saturacion_oxigeno
+                Codigo = dto.codigo.ToLower(),
+                Frecuencia_cardiaca = dto.frecuencia_cardiaca,
+                Presion_arterial = dto.presion_arterial,
+                Saturacion_oxigeno = dto.saturacion_oxigeno
             };
 
             _context.SignosVitales.Add(dato);

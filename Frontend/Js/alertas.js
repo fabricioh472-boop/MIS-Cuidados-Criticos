@@ -1,4 +1,4 @@
-﻿const API = "https:/cuidados-criticos-production.up.railway.app/api/Alerta";
+﻿const API = "https://cuidados-criticos-production.up.railway.app/api/Alerta";
 
 // LISTAR
 async function listarAlertas() {

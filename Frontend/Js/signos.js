@@ -1,4 +1,4 @@
-﻿const API = "https://cuidados-criticos-production.up.railway.app/api/SignoVital";
+﻿const API = "https://cuidados-criticos-production.up.railway.app/api/SignoPaciente/listar-signo-paciente";
 
 // -------------------- LISTAR --------------------
 async function listar() {

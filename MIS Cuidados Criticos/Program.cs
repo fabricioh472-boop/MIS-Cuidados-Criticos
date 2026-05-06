@@ -60,15 +60,10 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles(); //  FRONTEND 
-
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-//  Esto hace que "/" cargue tu frontend
-app.MapFallbackToFile("index.html");
 
 app.Run();
