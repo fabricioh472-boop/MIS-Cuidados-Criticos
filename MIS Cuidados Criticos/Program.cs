@@ -1,64 +1,74 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using MIS_Cuidados_Criticos.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
+//
+// CONTROLLERS
+//
 builder.Services.AddControllers();
 
-// HTTP CLIENT para consumir otros sistemas
+//
+// HTTP CLIENT
+//
 builder.Services.AddHttpClient();
 
-// CORS (IMPORTANTE para conectar frontend)
+//
+// CORS
+//
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
             .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod();
+    });
 });
 
-// DB Context
+//
+// DB CONTEXT
+//
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+    );
+});
 
-// Swagger
+//
+// SWAGGER
+//
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// --- RAILWAY ---
-/* Se habilitan Swagger y SwaggerUI fuera del bloque IsDevelopment
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Frontend")),
-    RequestPath = ""
-});
-app.UseDefaultFiles();
-*/
-app.MapFallbackToFile("index.html");
-app.UseStaticFiles();
+//
+// PIPELINE
+//
+
+// Swagger (siempre disponible en Railway)
 app.UseSwagger();
+
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Proyecto_H API V1");
-    c.RoutePrefix = string.Empty; // Esto hace que Swagger cargue en la raíz del link
+    c.RoutePrefix = string.Empty;
 });
-// --------------------------------
-
-// 🔴 ACTIVAR CORS (ANTES de MapControllers)
-app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(); //  FRONTEND 
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+//  Esto hace que "/" cargue tu frontend
+app.MapFallbackToFile("index.html");
 
 app.Run();
