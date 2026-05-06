@@ -27,7 +27,7 @@ builder.Services.AddControllers()
 });
 
 //
-// CONNECTION STRING (CORREGIDO PARA RAILWAY)
+// CONNECTION STRING (RAILWAY + LOCAL)
 //
 string connectionString;
 
@@ -39,6 +39,14 @@ var password = Environment.GetEnvironmentVariable("PGPASSWORD");
 
 if (!string.IsNullOrWhiteSpace(host))
 {
+    if (string.IsNullOrWhiteSpace(port) ||
+        string.IsNullOrWhiteSpace(database) ||
+        string.IsNullOrWhiteSpace(user) ||
+        string.IsNullOrWhiteSpace(password))
+    {
+        throw new Exception("Faltan variables de entorno PG en Railway");
+    }
+
     connectionString =
         $"Host={host};" +
         $"Port={port};" +
@@ -61,7 +69,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, npgsql =>
     {
         npgsql.EnableRetryOnFailure(3);
-        npgsql.CommandTimeout(30);
+        npgsql.CommandTimeout(60);
     })
 );
 
@@ -79,7 +87,7 @@ var app = builder.Build();
 app.MapGet("/ping", () => "OK");
 
 //
-// MIGRACIONES
+// MIGRACIONES (DESACTIVADAS EN RAILWAY PARA EVITAR CRASH)
 //
 using (var scope = app.Services.CreateScope())
 {
@@ -87,8 +95,10 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        db.Database.Migrate();
-        Console.WriteLine("Migraciones OK");
+        // IMPORTANTE: en Railway esto puede romper el deploy
+        // db.Database.Migrate();
+
+        Console.WriteLine("Migraciones desactivadas en runtime (usar manual o CI)");
     }
     catch (Exception ex)
     {
