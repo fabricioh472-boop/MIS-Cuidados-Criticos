@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MIS_Cuidados_Criticos.Data;
 using MIS_Cuidados_Criticos.Dominio;
+using MIS_Cuidados_Criticos.DTOs;
 using System.Security.Principal;
 namespace MIS_Cuidados_Criticos.Controllers
 {
@@ -53,35 +54,37 @@ namespace MIS_Cuidados_Criticos.Controllers
 
         // POST
         [HttpPost]
-        public async Task<IActionResult> AñadirAlerta(string codigo,string tipo, string nvcriticidad)
+        public async Task<IActionResult> AñadirAlerta([FromBody] AlertaCreateDto dto)
         {
             var dato = new Alerta
             {
                 Estado = "Activo",
-                Codigo = codigo.ToLower(),
-                Tipo = tipo.ToLower(),
-                Nivel_criticidad = nvcriticidad
+                Codigo = dto.Codigo.ToLower(),
+                Tipo = dto.Tipo.ToLower(),
+                Nivel_criticidad = dto.Nivel_criticidad
             };
+
             _context.Alertas.Add(dato);
             await _context.SaveChangesAsync();
+
             return Ok(dato);
         }
 
         // PUT POR CÓDIGO
         [HttpPut("{codigo}")]
-        public async Task<IActionResult> AñadirAlertaporCod(string codigo, string tipo, string nvcriticidad)
+        public async Task<IActionResult> AñadirAlertaporCod(string codigo, [FromBody] AlertaCreateDto dto)
         {
             var dato = await _context.Alertas
                 .FirstOrDefaultAsync(a => a.Codigo == codigo);
 
             if (dato == null) return NotFound();
 
-            dato.Tipo = tipo.ToLower();
-            dato.Nivel_criticidad = nvcriticidad.ToLower();
+            dato.Tipo = dto.Tipo.ToLower();
+            dato.Nivel_criticidad = dto.Nivel_criticidad.ToLower();
 
             await _context.SaveChangesAsync();
 
-            return Ok($"La alerta {codigo}, fue actualizada");
+            return Ok($"La alerta {codigo} fue actualizada");
         }
 
         // DELETE 

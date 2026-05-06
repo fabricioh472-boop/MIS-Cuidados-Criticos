@@ -45,16 +45,18 @@ namespace MIS_Cuidados_Criticos.Controllers
 
         // POST
         [HttpPost]
-        public async Task<IActionResult> AñadirPaciente(string codigo, string nombre)
+        public async Task<IActionResult> AñadirPaciente([FromBody] PacienteDTO dto)
         {
             var dato = new Paciente
             {
                 Estado = "Activo",
-                Codigo = codigo.ToLower(),
-                Nomre = nombre.ToLower()
+                Codigo = dto.codigo.ToLower(),
+                Nomre = dto.nombre.ToLower()
             };
+
             _context.Pacientes.Add(dato);
             await _context.SaveChangesAsync();
+
             return Ok(dato);
         }
 

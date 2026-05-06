@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MIS_Cuidados_Criticos.Data;
 using MIS_Cuidados_Criticos.Dominio;
+using MIS_Cuidados_Criticos.DTOs;
 
 namespace MIS_Cuidados_Criticos.Controllers
 {
@@ -16,7 +17,7 @@ namespace MIS_Cuidados_Criticos.Controllers
             _context = context;
         }
 
-        // GET 
+        // LISTAR
         [HttpGet]
         public async Task<IActionResult> ConseguiSignos()
         {
@@ -34,7 +35,7 @@ namespace MIS_Cuidados_Criticos.Controllers
             return Ok(dato);
         }
 
-        // GET cod
+        // BUSCAR
         [HttpGet("{codigo}")]
         public async Task<IActionResult> ConseguiSignosporCod(string codigo)
         {
@@ -53,42 +54,44 @@ namespace MIS_Cuidados_Criticos.Controllers
             return Ok(dato);
         }
 
-        // POST
+        // CREAR
         [HttpPost]
-        public async Task<IActionResult> AgregarSignos(string codigo,int fecuenciacardiaca, float saturacionoxigeno,string precionarterial)
+        public async Task<IActionResult> AgregarSignos(string codigo, int frecuencia_cardiaca, float saturacion_oxigeno, string presion_arterial)
         {
             var dato = new SignoVital
             {
                 Estado = "Activo",
                 Codigo = codigo.ToLower(),
-                Frecuencia_cardiaca = fecuenciacardiaca,
-                Presion_arterial = precionarterial,
-                Saturacion_oxigeno = saturacionoxigeno
+                Frecuencia_cardiaca = frecuencia_cardiaca,
+                Presion_arterial = presion_arterial,
+                Saturacion_oxigeno = saturacion_oxigeno
             };
+
             _context.SignosVitales.Add(dato);
             await _context.SaveChangesAsync();
+
             return Ok(dato);
         }
 
-        // PUT por cod
+        // UPDATE
         [HttpPut("{codigo}")]
-        public async Task<IActionResult> AgregarSignosporCod(string codigo, int fecuenciacardiaca, float saturacionoxigeno, string precionarterial)
+        public async Task<IActionResult> AgregarSignosporCod(string codigo, int frecuencia_cardiaca, float saturacion_oxigeno, string presion_arterial)
         {
             var dato = await _context.SignosVitales
                 .FirstOrDefaultAsync(a => a.Codigo == codigo);
 
             if (dato == null) return NotFound();
 
-            dato.Frecuencia_cardiaca = fecuenciacardiaca;
-            dato.Presion_arterial = precionarterial;
-            dato.Saturacion_oxigeno = saturacionoxigeno;
+            dato.Frecuencia_cardiaca = frecuencia_cardiaca;
+            dato.Presion_arterial = presion_arterial;
+            dato.Saturacion_oxigeno = saturacion_oxigeno;
 
             await _context.SaveChangesAsync();
 
-            return Ok($"El signo vital {codigo}, fue actualizado");
+            return Ok($"El signo vital {codigo} fue actualizado");
         }
 
-        // DELETE 
+        // DELETE
         [HttpDelete("{codigo}")]
         public async Task<IActionResult> EliminarSignos(string codigo)
         {
@@ -101,32 +104,32 @@ namespace MIS_Cuidados_Criticos.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok("Eliminado correctamente");
         }
-        //JOIN con los 3 controllers
-        
+
+        // DASHBOARD RESUMIDO
         [HttpGet("CC-resumido")]
         public async Task<IActionResult> ObtenerTodo()
         {
-            var dato = await
-                (
-                    from a in _context.SignosVitales
-                    join b in _context.SignoAlertas
-                    on a.Id equals b.Id_signo_vital
-                    join c in _context.Alertas
-                    on b.Id_alerta equals c.Id
-                    where a.Estado == "Activo" && c.Estado == "Activo"
-                    select new
-                    {
-                        CodigoSigno = a.Codigo,
-                        FrecuenciaCardiaca = a.Frecuencia_cardiaca,
-                        Presion = a.Presion_arterial,
-                        Saturacion = a.Saturacion_oxigeno < 85 ? "Critico" : a.Saturacion_oxigeno > 92 ? "Riesgo" : "Estable",
-                        CodigoAlerta = c.Codigo,
-                        TipoAle = c.Tipo,
-                        Nivel = c.Nivel_criticidad
-                    }
-                ).ToListAsync();
+            var dato = await (
+                from a in _context.SignosVitales
+                join b in _context.SignoAlertas on a.Id equals b.Id_signo_vital
+                join c in _context.Alertas on b.Id_alerta equals c.Id
+                where a.Estado == "Activo" && c.Estado == "Activo"
+                select new
+                {
+                    CodigoSigno = a.Codigo,
+                    FrecuenciaCardiaca = a.Frecuencia_cardiaca,
+                    Presion = a.Presion_arterial,
+                    Saturacion =
+                        a.Saturacion_oxigeno < 85 ? "Critico" :
+                        a.Saturacion_oxigeno > 92 ? "Riesgo" : "Estable",
+                    CodigoAlerta = c.Codigo,
+                    TipoAle = c.Tipo,
+                    Nivel = c.Nivel_criticidad
+                }
+            ).ToListAsync();
+
             return Ok(dato);
         }
     }

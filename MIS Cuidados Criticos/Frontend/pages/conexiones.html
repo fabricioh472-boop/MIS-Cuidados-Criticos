@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Conexiones</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <h1>Módulo de Conexiones</h1>
+
+    <hr>
+
+    <!-- ENFERMERAS DISPONIBLES -->
+    <h3>Enfermeras Disponibles</h3>
+    <button onclick="cargarEnfermeras()">Ver Enfermeras</button>
+
+    <ul id="listaEnfermeras"></ul>
+
+    <hr>
+
+    <!-- RECIBIR PACIENTE -->
+    <h3>Recibir Paciente desde Logística</h3>
+
+    <input id="codigo" placeholder="Código">
+    <input id="nombre" placeholder="Nombre">
+    <button onclick="recibirPaciente()">Registrar</button>
+
+    <p id="respuesta"></p>
+
+    <script src="../js/conexiones.js"></script>
+
+</body>
+</html>

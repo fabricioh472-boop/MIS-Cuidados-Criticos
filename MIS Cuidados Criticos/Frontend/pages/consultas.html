@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultas Clínicas</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <h1>Panel de Consultas Clínicas</h1>
+
+    <hr>
+
+    <h2>1. Listado General</h2>
+    <button onclick="listadoGeneral()">Cargar</button>
+    <table border="1">
+        <tbody id="tablaGeneral"></tbody>
+    </table>
+
+    <hr>
+
+    <h2>2. Alertas por Nivel</h2>
+    <button onclick="alertasNivel()">Cargar</button>
+    <ul id="nivel"></ul>
+
+    <hr>
+
+    <h2>3. Suma FC por Paciente</h2>
+    <input id="pacienteFC" placeholder="Código paciente">
+    <button onclick="sumaFC()">Buscar</button>
+    <div id="fc"></div>
+
+    <hr>
+
+    <h2>4. Buscar Alerta</h2>
+    <input id="codAlerta" placeholder="Código alerta">
+    <button onclick="buscarAlerta()">Buscar</button>
+    <div id="alerta"></div>
+
+    <hr>
+
+    <h2>5. Signos sin alerta</h2>
+    <button onclick="signosSinAlerta()">Ver</button>
+    <ul id="sinAlerta"></ul>
+
+    <hr>
+
+    <h2>6. Estado actual paciente</h2>
+    <button onclick="estadoPaciente()">Ver</button>
+    <div id="estado"></div>
+
+    <hr>
+
+    <h2>7. Historial paciente</h2>
+    <input id="histPaciente" placeholder="Código">
+    <button onclick="historial()">Ver</button>
+    <ul id="historial"></ul>
+
+    <hr>
+
+    <h2>8. Paciente con más alertas</h2>
+    <button onclick="masAlertas()">Ver</button>
+    <div id="mas"></div>
+
+    <hr>
+
+    <h2>9. Pacientes sin alerta</h2>
+    <button onclick="sinAlertas()">Ver</button>
+    <ul id="sin"></ul>
+
+    <hr>
+
+    <h2>10. Oxígeno bajo</h2>
+    <button onclick="oxigenoBajo()">Ver</button>
+    <ul id="oxi"></ul>
+
+    <hr>
+
+    <h2>11. Evolución clínica</h2>
+    <input id="evoPaciente" placeholder="Código">
+    <button onclick="evolucion()">Ver</button>
+    <ul id="evo"></ul>
+
+    <hr>
+
+    <h2>12. Cantidad signos</h2>
+    <button onclick="cantidadSignos()">Ver</button>
+    <div id="cant"></div>
+
+    <hr>
+
+    <h2>13. Últimas alertas</h2>
+    <button onclick="ultimasAlertas()">Ver</button>
+    <ul id="ultimas"></ul>
+
+    <hr>
+
+    <h2>14. Promedio FC</h2>
+    <input id="promPaciente" placeholder="Código">
+    <button onclick="promedioFC()">Ver</button>
+    <div id="prom"></div>
+
+    <hr>
+
+    <h2>15. Pacientes críticos</h2>
+    <button onclick="criticos()">Ver</button>
+    <ul id="criticos"></ul>
+
+    <hr>
+
+    <h2>16. Filtrar pacientes</h2>
+    <input id="fcMin">
+    <input id="fcMax">
+    <input id="satMin">
+    <button onclick="filtrar()">Filtrar</button>
+    <ul id="filtrados"></ul>
+
+    <hr>
+
+    <h2>17. Comparar pacientes</h2>
+    <input id="p1">
+    <input id="p2">
+    <button onclick="comparar()">Comparar</button>
+    <div id="comp"></div>
+
+    <hr>
+
+    <h2>18. Frecuencia alertas</h2>
+    <input id="faPaciente">
+    <input id="fi">
+    <input id="ff">
+    <button onclick="freqAlertas()">Ver</button>
+    <div id="fa"></div>
+
+    <hr>
+
+    <h2>19. Variabilidad signos</h2>
+    <input id="vfi">
+    <input id="vff">
+    <button onclick="variabilidad()">Ver</button>
+    <div id="var"></div>
+
+    <script src="../js/consultas.js"></script>
+
+</body>
+</html>

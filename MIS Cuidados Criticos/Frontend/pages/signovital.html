@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Signos Vitales</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Signos Vitales</h1>
+
+    <button onclick="listar()">Listar</button>
+    <div id="lista"></div>
+
+    <hr>
+
+    <h3>Crear signo vital</h3>
+
+    <input id="codigo" placeholder="Código">
+    <input id="fc" placeholder="Frecuencia cardiaca">
+    <input id="sat" placeholder="Saturación">
+    <input id="pa" placeholder="Presión arterial">
+    <button onclick="crear()">Crear</button>
+
+    <hr>
+
+    <h3>Buscar</h3>
+    <input id="buscar" placeholder="Código">
+    <button onclick="buscar()">Buscar</button>
+    <div id="resultado"></div>
+
+    <script src="signoVital.js"></script>
+
+</body>
+</html>

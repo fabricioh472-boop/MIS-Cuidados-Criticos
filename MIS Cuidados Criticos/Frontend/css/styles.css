@@ -1,0 +1,54 @@
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #e6f7ff;
+    color: #00334d;
+}
+
+/* HEADER */
+header {
+    background: #00bcd4;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* CONTENEDOR */
+.container {
+    padding: 20px;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* TARJETAS */
+.card {
+    background: white;
+    border: 2px solid #00bcd4;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #007c91;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+    .card:hover {
+        background: #00bcd4;
+        color: white;
+        transform: scale(1.05);
+    }
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #b3ecff;
+    margin-top: 30px;
+}

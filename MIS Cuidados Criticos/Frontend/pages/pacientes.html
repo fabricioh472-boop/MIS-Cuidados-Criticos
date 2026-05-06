@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Pacientes</title>
+</head>
+<body>
+
+    <h1>Pacientes</h1>
+
+    <!-- LISTAR -->
+    <button onclick="listarPacientes()">Listar Pacientes</button>
+    <div id="lista"></div>
+
+    <hr>
+
+    <!-- BUSCAR -->
+    <h3>Buscar paciente</h3>
+    <input id="codigoBuscar" placeholder="Código">
+    <button onclick="buscarPaciente()">Buscar</button>
+    <div id="resultadoBuscar"></div>
+
+    <hr>
+
+    <!-- CREAR -->
+    <h3>Agregar paciente</h3>
+    <input id="codigo" placeholder="Código">
+    <input id="nombre" placeholder="Nombre">
+    <button onclick="crearPaciente()">Guardar</button>
+
+    <hr>
+
+    <!-- ACTUALIZAR -->
+    <h3>Actualizar paciente</h3>
+    <input id="codigoUp" placeholder="Código">
+    <input id="nombreUp" placeholder="Nuevo nombre">
+    <button onclick="actualizarPaciente()">Actualizar</button>
+
+    <hr>
+
+    <!-- ELIMINAR -->
+    <h3>Eliminar (inactivar)</h3>
+    <input id="codigoDel" placeholder="Código">
+    <button onclick="eliminarPaciente()">Eliminar</button>
+
+    <script src="../Js/pacientes.js"></script>
+
+</body>
+</html>

@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MIS_Cuidados_Criticos.Data;
 using MIS_Cuidados_Criticos.Dominio;
+using MIS_Cuidados_Criticos.DTOs;
+
 namespace MIS_Cuidados_Criticos.Controllers
 {
     [Route("api/[controller]")]
@@ -9,11 +11,13 @@ namespace MIS_Cuidados_Criticos.Controllers
     public class SignoPacienteController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+
         public SignoPacienteController(ApplicationDbContext context)
         {
             _context = context;
         }
-        //Listar signo por paciente
+
+        // LISTAR
         [HttpGet("listar-signo-paciente")]
         public async Task<IActionResult> ListarSignoPaciente()
         {
@@ -27,29 +31,37 @@ namespace MIS_Cuidados_Criticos.Controllers
                     SignoVital = c.Codigo,
                     a.Fecha_hora
                 }).ToListAsync();
+
             return Ok(dato);
         }
+
+        // CREAR RELACIÓN
         [HttpPost]
-        public async Task<IActionResult> AsociarPacienteSigno(string codigopaciente, string codigosigno)
+        public async Task<IActionResult> AsociarPacienteSigno([FromBody] SignoPacienteDTO dto)
         {
             var paciente = await _context.Pacientes
-                .FirstOrDefaultAsync(a => a.Codigo == codigopaciente && a.Estado == "Activo");
+                .FirstOrDefaultAsync(a => a.Codigo == dto.codigopaciente && a.Estado == "Activo");
+
             if (paciente == null)
                 return BadRequest("El paciente no existe o está inactivo");
+
             var signo = await _context.SignosVitales
-                .FirstOrDefaultAsync(a => a.Codigo == codigosigno && a.Estado == "Activo");
+                .FirstOrDefaultAsync(a => a.Codigo == dto.codigosigno && a.Estado == "Activo");
+
             if (signo == null)
                 return BadRequest("El signo vital no existe o está inactivo");
+
             var rela = new SignoPaciente
             {
                 Id_paciente = paciente.Id,
                 id_signo = signo.Id,
                 Fecha_hora = DateTime.UtcNow
             };
+
             _context.SignoPacientes.Add(rela);
             await _context.SaveChangesAsync();
-            return Ok("La relacion fue creada corectamente");
-        }
 
+            return Ok("Relación creada correctamente");
+        }
     }
 }

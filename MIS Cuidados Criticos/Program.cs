@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using MIS_Cuidados_Criticos.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,14 @@ var app = builder.Build();
 
 // --- RAILWAY ---
 // Se habilitan Swagger y SwaggerUI fuera del bloque IsDevelopment
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Frontend")),
+    RequestPath = ""
+});
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
