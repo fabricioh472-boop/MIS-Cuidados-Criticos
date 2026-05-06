@@ -102,7 +102,7 @@ namespace MIS_Cuidados_Criticos.Controllers
         }
         //4. CONSULTAS MIS
         [HttpGet("estado-actual-paciente/{codigo}")]
-        public async Task<IActionResult> EstadoActualPaciente()
+        public async Task<IActionResult> EstadoActualPaciente(string codigo)
         {
             var dato = await (
                 from a in _context.SignoPacientes

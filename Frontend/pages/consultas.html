@@ -1,146 +1,360 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Consultas Clínicas</title>
-    <link rel="stylesheet" href="../css/styles.css">
+<meta charset="UTF-8">
+<title>Dashboard Consultas UCI</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:0;
+    background:#e6f7ff;
+}
+
+header{
+    background:#0077b6;
+    color:white;
+    padding:15px;
+    text-align:center;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h3{
+    color:#0077b6;
+}
+
+button{
+    background:#00b4d8;
+    border:none;
+    color:white;
+    padding:8px 12px;
+    margin:5px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+button:hover{
+    background:#0077b6;
+}
+
+input{
+    padding:8px;
+    margin:5px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th, td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:center;
+}
+
+th{
+    background:#0077b6;
+    color:white;
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Panel de Consultas Clínicas</h1>
+<header>
+<h1>CONSULTAS UCI - DASHBOARD</h1>
+</header>
 
-    <hr>
+<div class="container">
 
-    <h2>1. Listado General</h2>
-    <button onclick="listadoGeneral()">Cargar</button>
-    <table border="1">
-        <tbody id="tablaGeneral"></tbody>
-    </table>
+<!-- 1 -->
+<div class="card">
+<h3>📊 Listado General (JOIN 3 tablas)</h3>
+<button onclick="listadoGeneral()">Cargar</button>
+<table><tbody id="tablaGeneral"></tbody></table>
+</div>
 
-    <hr>
+<!-- 2 -->
+<div class="card">
+<h3>⚠ Alertas por nivel</h3>
+<button onclick="alertasNivel()">Ver</button>
+<ul id="nivel"></ul>
+</div>
 
-    <h2>2. Alertas por Nivel</h2>
-    <button onclick="alertasNivel()">Cargar</button>
-    <ul id="nivel"></ul>
+<!-- 3 -->
+<div class="card">
+<h3>❤️ Suma FC por paciente</h3>
+<input id="pacienteFC" placeholder="Código paciente">
+<button onclick="sumaFC()">Buscar</button>
+<div id="fc"></div>
+</div>
 
-    <hr>
+<!-- 4 -->
+<div class="card">
+<h3>🔎 Buscar alerta</h3>
+<input id="codAlerta" placeholder="Código alerta">
+<button onclick="buscarAlerta()">Buscar</button>
+<div id="alerta"></div>
+</div>
 
-    <h2>3. Suma FC por Paciente</h2>
-    <input id="pacienteFC" placeholder="Código paciente">
-    <button onclick="sumaFC()">Buscar</button>
-    <div id="fc"></div>
+<!-- 5 -->
+<div class="card">
+<h3>🚫 Signos sin alerta</h3>
+<button onclick="signosSinAlerta()">Ver</button>
+<ul id="sinAlerta"></ul>
+</div>
 
-    <hr>
+<!-- 6 -->
+<div class="card">
+<h3>📍 Estado paciente</h3>
+<input id="estadoPacienteCod" placeholder="Código paciente">
+<button onclick="estadoPaciente()">Consultar</button>
+<div id="estado"></div>
+</div>
 
-    <h2>4. Buscar Alerta</h2>
-    <input id="codAlerta" placeholder="Código alerta">
-    <button onclick="buscarAlerta()">Buscar</button>
-    <div id="alerta"></div>
+<!-- 7 -->
+<div class="card">
+<h3>📜 Historial signos</h3>
+<input id="histPaciente" placeholder="Código paciente">
+<button onclick="historial()">Ver</button>
+<ul id="historial"></ul>
+</div>
 
-    <hr>
+<!-- 8 -->
+<div class="card">
+<h3>🚨 Paciente con más alertas</h3>
+<button onclick="masAlertas()">Ver</button>
+<div id="mas"></div>
+</div>
 
-    <h2>5. Signos sin alerta</h2>
-    <button onclick="signosSinAlerta()">Ver</button>
-    <ul id="sinAlerta"></ul>
+<!-- 9 -->
+<div class="card">
+<h3>🟢 Pacientes sin alerta</h3>
+<button onclick="sinAlertas()">Ver</button>
+<ul id="sin"></ul>
+</div>
 
-    <hr>
+<!-- 10 -->
+<div class="card">
+<h3>🫁 Oxígeno bajo</h3>
+<button onclick="oxigenoBajo()">Ver</button>
+<ul id="oxi"></ul>
+</div>
 
-    <h2>6. Estado actual paciente</h2>
-    <button onclick="estadoPaciente()">Ver</button>
-    <div id="estado"></div>
+<!-- 11 -->
+<div class="card">
+<h3>📈 Evolución clínica</h3>
+<input id="evoPaciente" placeholder="Código paciente">
+<button onclick="evolucion()">Ver</button>
+<ul id="evo"></ul>
+</div>
 
-    <hr>
+<!-- 12 -->
+<div class="card">
+<h3>📊 Cantidad signos</h3>
+<button onclick="cantidadSignos()">Ver</button>
+<div id="cant"></div>
+</div>
 
-    <h2>7. Historial paciente</h2>
-    <input id="histPaciente" placeholder="Código">
-    <button onclick="historial()">Ver</button>
-    <ul id="historial"></ul>
+<!-- 13 -->
+<div class="card">
+<h3>🔥 Últimas alertas</h3>
+<button onclick="ultimasAlertas()">Ver</button>
+<ul id="ultimas"></ul>
+</div>
 
-    <hr>
+<!-- 14 -->
+<div class="card">
+<h3>📉 Promedio FC</h3>
+<input id="promPaciente" placeholder="Código paciente">
+<button onclick="promedioFC()">Calcular</button>
+<div id="prom"></div>
+</div>
 
-    <h2>8. Paciente con más alertas</h2>
-    <button onclick="masAlertas()">Ver</button>
-    <div id="mas"></div>
+<!-- 15 -->
+<div class="card">
+<h3>🚨 Pacientes críticos</h3>
+<button onclick="criticos()">Ver</button>
+<ul id="criticos"></ul>
+</div>
 
-    <hr>
+<!-- 16 -->
+<div class="card">
+<h3>📊 Filtrar pacientes</h3>
+<input id="fcMin" placeholder="FC min">
+<input id="fcMax" placeholder="FC max">
+<input id="satMin" placeholder="Sat max">
+<button onclick="filtrar()">Filtrar</button>
+<ul id="filtrados"></ul>
+</div>
 
-    <h2>9. Pacientes sin alerta</h2>
-    <button onclick="sinAlertas()">Ver</button>
-    <ul id="sin"></ul>
+<!-- 17 -->
+<div class="card">
+<h3>⚖ Comparar pacientes</h3>
+<input id="p1" placeholder="Paciente 1">
+<input id="p2" placeholder="Paciente 2">
+<button onclick="comparar()">Comparar</button>
+<div id="comp"></div>
+</div>
 
-    <hr>
+</div>
 
-    <h2>10. Oxígeno bajo</h2>
-    <button onclick="oxigenoBajo()">Ver</button>
-    <ul id="oxi"></ul>
+<script>
 
-    <hr>
+const API = "https://cuidados-criticos-production.up.railway.app/api/Consultas";
 
-    <h2>11. Evolución clínica</h2>
-    <input id="evoPaciente" placeholder="Código">
-    <button onclick="evolucion()">Ver</button>
-    <ul id="evo"></ul>
+// 1
+async function listadoGeneral(){
+    const r = await fetch(API + "/listado-general");
+    const d = await r.json();
+    document.getElementById("tablaGeneral").innerHTML =
+        d.map(x => `<tr><td>${JSON.stringify(x)}</td></tr>`).join("");
+}
 
-    <hr>
+// 2
+async function alertasNivel(){
+    const r = await fetch(API + "/alertas-por-nivel");
+    const d = await r.json();
+    document.getElementById("nivel").innerHTML =
+        d.map(x => `<li>${x.nivel} - ${x.cantidad}</li>`).join("");
+}
 
-    <h2>12. Cantidad signos</h2>
-    <button onclick="cantidadSignos()">Ver</button>
-    <div id="cant"></div>
+// 3
+async function sumaFC(){
+    const c = document.getElementById("pacienteFC").value;
+    const r = await fetch(API + `/frecuencia-cardiaca-por-paciente?codigo=${c}`);
+    document.getElementById("fc").innerText = await r.text();
+}
 
-    <hr>
+// 4
+async function buscarAlerta(){
+    const c = document.getElementById("codAlerta").value;
+    const r = await fetch(API + `/Alerta-por-codigo/${c}`);
+    document.getElementById("alerta").innerText = await r.text();
+}
 
-    <h2>13. Últimas alertas</h2>
-    <button onclick="ultimasAlertas()">Ver</button>
-    <ul id="ultimas"></ul>
+// 5
+async function signosSinAlerta(){
+    const r = await fetch(API + "/Signo-sin-alerta");
+    const d = await r.json();
+    document.getElementById("sinAlerta").innerHTML =
+        d.map(x => `<li>${x.codigoSigno}</li>`).join("");
+}
 
-    <hr>
+// 6
+async function estadoPaciente(){
+    const c = document.getElementById("estadoPacienteCod").value;
+    const r = await fetch(API + `/estado-actual-paciente/${c}`);
+    document.getElementById("estado").innerText = await r.text();
+}
 
-    <h2>14. Promedio FC</h2>
-    <input id="promPaciente" placeholder="Código">
-    <button onclick="promedioFC()">Ver</button>
-    <div id="prom"></div>
+// 7
+async function historial(){
+    const c = document.getElementById("histPaciente").value;
+    const r = await fetch(API + `/historial-signos/${c}`);
+    const d = await r.json();
+    document.getElementById("historial").innerHTML =
+        d.map(x => `<li>${JSON.stringify(x)}</li>`).join("");
+}
 
-    <hr>
+// 8
+async function masAlertas(){
+    const r = await fetch(API + "/Paciente-con-mas-alertas");
+    document.getElementById("mas").innerText = await r.text();
+}
 
-    <h2>15. Pacientes críticos</h2>
-    <button onclick="criticos()">Ver</button>
-    <ul id="criticos"></ul>
+// 9
+async function sinAlertas(){
+    const r = await fetch(API + "/Paciente-sin-alerta");
+    const d = await r.json();
+    document.getElementById("sin").innerHTML =
+        d.map(x => `<li>${x.codigo}</li>`).join("");
+}
 
-    <hr>
+// 10
+async function oxigenoBajo(){
+    const r = await fetch(API + "/Oxigeno%20bajo");
+    const d = await r.json();
+    document.getElementById("oxi").innerHTML =
+        d.map(x => `<li>${x.codigo} - ${x.saturacion_oxigeno}</li>`).join("");
+}
 
-    <h2>16. Filtrar pacientes</h2>
-    <input id="fcMin">
-    <input id="fcMax">
-    <input id="satMin">
-    <button onclick="filtrar()">Filtrar</button>
-    <ul id="filtrados"></ul>
+// 11
+async function evolucion(){
+    const c = document.getElementById("evoPaciente").value;
+    const r = await fetch(API + `/evolucion-clinica/${c}`);
+    const d = await r.json();
+    document.getElementById("evo").innerHTML =
+        d.map(x => `<li>${JSON.stringify(x)}</li>`).join("");
+}
 
-    <hr>
+// 12
+async function cantidadSignos(){
+    const r = await fetch(API + "/Cantidad-signos");
+    document.getElementById("cant").innerText = await r.text();
+}
 
-    <h2>17. Comparar pacientes</h2>
-    <input id="p1">
-    <input id="p2">
-    <button onclick="comparar()">Comparar</button>
-    <div id="comp"></div>
+// 13
+async function ultimasAlertas(){
+    const r = await fetch(API + "/Mostrar-ultimas-alertas");
+    const d = await r.json();
+    document.getElementById("ultimas").innerHTML =
+        d.map(x => `<li>${x.codigo}</li>`).join("");
+}
 
-    <hr>
+// 14
+async function promedioFC(){
+    const c = document.getElementById("promPaciente").value;
+    const r = await fetch(API + `/promedio-fc/${c}`);
+    document.getElementById("prom").innerText = await r.text();
+}
 
-    <h2>18. Frecuencia alertas</h2>
-    <input id="faPaciente">
-    <input id="fi">
-    <input id="ff">
-    <button onclick="freqAlertas()">Ver</button>
-    <div id="fa"></div>
+// 15
+async function criticos(){
+    const r = await fetch(API + "/Pacientes-criticos-con-alerta");
+    const d = await r.json();
+    document.getElementById("criticos").innerHTML =
+        d.map(x => `<li>${x.pacienteCritico}</li>`).join("");
+}
 
-    <hr>
+// 16
+async function filtrar(){
+    const fcMin = document.getElementById("fcMin").value;
+    const fcMax = document.getElementById("fcMax").value;
+    const satMin = document.getElementById("satMin").value;
 
-    <h2>19. Variabilidad signos</h2>
-    <input id="vfi">
-    <input id="vff">
-    <button onclick="variabilidad()">Ver</button>
-    <div id="var"></div>
+    const r = await fetch(API + `/filtrar-pacientes-rango?fcMin=${fcMin}&fcMax=${fcMax}&satMin=${satMin}`);
+    const d = await r.json();
 
-    <script src="../js/consultas.js"></script>
+    document.getElementById("filtrados").innerHTML =
+        d.map(x => `<li>${x.paciente}</li>`).join("");
+}
+
+// 17
+async function comparar(){
+    const p1 = document.getElementById("p1").value;
+    const p2 = document.getElementById("p2").value;
+
+    const r = await fetch(API + `/comparar-pacientes?cod1=${p1}&cod2=${p2}`);
+    document.getElementById("comp").innerText = await r.text();
+}
+
+</script>
 
 </body>
 </html>
