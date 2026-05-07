@@ -340,24 +340,61 @@ namespace MIS_Cuidados_Criticos.Controllers
             });
         }
         [HttpGet("frecuencia-alertas")]
-        public async Task<IActionResult> FrecuenciaAlertas(string codigo, DateTime fechaInicio, DateTime fechaFin)
+        public async Task<IActionResult> FrecuenciaAlertas(
+    string codigo,
+    string fechaInicio,
+    string fechaFin)
         {
-            var dato = await (
+            // VALIDAR FECHAS
+            if (string.IsNullOrWhiteSpace(fechaInicio) ||
+                string.IsNullOrWhiteSpace(fechaFin))
+            {
+                return BadRequest("Debe ingresar ambas fechas");
+            }
+
+            // CONVERTIR FECHAS
+            if (!DateTime.TryParse(fechaInicio, out DateTime inicio))
+            {
+                return BadRequest("Fecha inicio inválida");
+            }
+
+            if (!DateTime.TryParse(fechaFin, out DateTime fin))
+            {
+                return BadRequest("Fecha fin inválida");
+            }
+
+            // AJUSTAR UTC
+            inicio = DateTime.SpecifyKind(inicio, DateTimeKind.Utc);
+            fin = DateTime.SpecifyKind(fin, DateTimeKind.Utc);
+
+            // CONSULTA
+            var total = await (
                 from sp in _context.SignoPacientes
-                join p in _context.Pacientes on sp.Id_paciente equals p.Id
-                join sv in _context.SignosVitales on sp.id_signo equals sv.Id
-                join sa in _context.SignoAlertas on sv.Id equals sa.Id_signo_vital
-                join a in _context.Alertas on sa.Id_alerta equals a.Id
+                join p in _context.Pacientes
+                    on sp.Id_paciente equals p.Id
+
+                join sv in _context.SignosVitales
+                    on sp.id_signo equals sv.Id
+
+                join sa in _context.SignoAlertas
+                    on sv.Id equals sa.Id_signo_vital
+
+                join a in _context.Alertas
+                    on sa.Id_alerta equals a.Id
+
                 where p.Codigo == codigo
-                      && sp.Fecha_hora >= fechaInicio
-                      && sp.Fecha_hora <= fechaFin
-                select a.Id
+                      && sp.Fecha_hora >= inicio
+                      && sp.Fecha_hora <= fin
+
+                select sa.Id
             ).CountAsync();
 
             return Ok(new
             {
                 Paciente = codigo,
-                TotalAlertas = dato
+                FechaInicio = inicio,
+                FechaFin = fin,
+                TotalAlertas = total
             });
         }
         [HttpGet("variabilidad-signos")]
